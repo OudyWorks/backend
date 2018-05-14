@@ -1,0 +1,40 @@
+{
+  "name": "@oudyworks/backend",
+  "version": "1.0.5",
+  "description": "backend framework",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel source --out-dir npm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OudyWorks/backend.git"
+  },
+  "keywords": [
+    "nodejs",
+    "server",
+    "framework",
+    "backend",
+    "http",
+    "json"
+  ],
+  "author": "Ayoub Oudmane <ayoub@Oudmane.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OudyWorks/backend/issues"
+  },
+  "homepage": "https://github.com/OudyWorks/backend#readme",
+  "dependencies": {
+    "accepts": "^1.3.5",
+    "body-parser": "^1.18.3",
+    "booleanify": "^1.0.0",
+    "cookie": "^0.3.1",
+    "cookie-signature": "^1.1.0",
+    "express": "^4.16.3",
+    "parse-multipart": "^1.0.4",
+    "qs": "^6.5.2",
+    "recursive-readdir-sync": "^1.0.6",
+    "utils-merge": "^1.0.1",
+    "ws": "^5.1.1"
+  }
+}
