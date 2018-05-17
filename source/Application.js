@@ -1,5 +1,6 @@
 import recursiveReadSync from 'recursive-readdir-sync'
 import Renderer from './Renderer'
+import merge from 'utils-merge'
 
 const componentRegex = /components\/([0-9a-zA-Z.]+)(\/tasks\/([0-9a-zA-Z.]+))?\/controller\.js$/,
     moduleRegex = /modules\/([0-9a-zA-Z.]+)\/controller\.js$/,
@@ -82,7 +83,7 @@ class Application {
                                 resolve =>
                                     Promise.resolve(route.url.test(request.path)).then(
                                         isMatched =>
-                                            isMatched && resolve(route)
+                                            isMatched && resolve(merge({}, route))
                                     )
                             )
                     )
@@ -95,9 +96,7 @@ class Application {
 
     async load(request, response, route) {
 
-        let payload = {
-            test: 'Hello'
-        }
+        let payload = {}
 
         return trigger(this.constructor, 'beforeLoad', [this, request, response, route, payload]).then(
             () =>
