@@ -76,7 +76,7 @@ export default class Request {
         this.method = request.method || 'GET'
         this.id = request.id || ''
         this.parseURL(request.url)
-        this.parseBody(request.data || {}, 'object')
+        this.parseBody(request.body || {}, 'object')
     }
 
     isInPath(component) {

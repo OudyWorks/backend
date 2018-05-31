@@ -1,6 +1,6 @@
 {
   "name": "@oudyworks/backend",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "backend framework",
   "main": "index.js",
   "scripts": {},
@@ -33,6 +33,7 @@
     "cookie": "^0.3.1",
     "cookie-signature": "^1.1.0",
     "express": "^4.16.3",
+    "lodash.clonedeep": "^4.5.0",
     "parse-multipart": "^1.0.4",
     "qs": "^6.5.2",
     "recursive-readdir-sync": "^1.0.6",

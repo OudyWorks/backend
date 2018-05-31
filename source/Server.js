@@ -6,6 +6,7 @@ import {Server as Websocket} from 'ws'
 import Request from './Request'
 import Response from './Response'
 import Application from './Application'
+import deepClone from 'lodash.clonedeep'
 
 class Server {
     constructor() {
@@ -20,20 +21,38 @@ class Server {
         )
         this.websocket.on(
             'connection',
-            (request, response) =>
+            (response, request) =>
                 this.request(request, response, true)
         )
     }
     async request(request, response, socket = false) {
 
         return Request.parse(request).then(
-            request => {
+            async request => {
 
                 response = Response.wrap(response)
 
                 let application = new this.constructor.Application(socket)
 
-                return this.process(application, request, response)
+                await application.initiate(request, response)
+
+                if(socket)
+                    response.on(
+                        'message',
+                        message => {
+
+                            message = JSON.parse(message)
+
+                            request = deepClone(request)
+
+                            request.append(message)
+
+                            this.process(application, request, response)
+
+                        }
+                    )
+                else
+                    return this.process(application, request, response)
 
             }
         )
@@ -41,15 +60,13 @@ class Server {
     }
     async process(application, request, response) {
 
-        await application.initiate(request, response)
-
         let route = await application.route(request, response)
 
         let payload = await application.load(request, response, route)
 
         application.render(request, response, route, payload).then(
             body =>
-                !response.finished && body.pipe(response)
+                application.socket ? response.send(JSON.stringify({id: request.id, response: body})) : (!response.finished && body.pipe(response))
         )
 
     }
