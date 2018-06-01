@@ -43,11 +43,11 @@ class Server {
 
                             message = JSON.parse(message)
 
-                            request = deepClone(request)
+                            let _request = deepClone(request)
 
-                            request.append(message)
+                            _request.append(message)
 
-                            this.process(application, request, response)
+                            this.process(application, _request, response)
 
                         }
                     )
