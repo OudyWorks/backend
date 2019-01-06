@@ -1,0 +1,33 @@
+{
+  "name": "@oudy/backend",
+  "version": "1.0.0",
+  "description": "backend framework",
+  "main": "index.js",
+  "scripts": {},
+  "bin": {
+    "backend": "bin/index.js"
+  },
+  "keywords": [
+    "nodejs",
+    "server",
+    "framework",
+    "backend",
+    "http",
+    "json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OudyWorks/backend.git"
+  },
+  "author": "Ayoub Oudmane <ayoub@Oudmane.me>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OudyWorks/backend/issues"
+  },
+  "homepage": "https://github.com/OudyWorks/backend#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "ws": "^6.1.2"
+  }
+}
