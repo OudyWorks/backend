@@ -5,7 +5,6 @@ class Request {
   constructor(request, socket = false) {
     this.request = request
     this.socket = socket
-    // console.log(this.request)
   }
   get headers() {
     return this.request.headers
@@ -36,6 +35,32 @@ class Request {
   }
   get body() {
     return this._parsedBody || null
+  }
+  isInPath(component) {
+    return this.pathArray.includes(component.toString())
+  }
+  nextInPath(component) {
+    let index
+    if ((index = this.pathArray.indexOf(component.toString())) !== -1)
+      if (typeof this.pathArray[++index] !== 'undefined')
+        return this.pathArray[index]
+    return undefined
+  }
+
+  isInPOST(key) {
+    return typeof this.bodyObject[key] !== 'undefined'
+  }
+
+  getPOST(key) {
+    return this.isInPOST(key) ? this.bodyObject[key] : undefined
+  }
+
+  isInGET(key) {
+    return typeof this.queryObject[key] !== 'undefined'
+  }
+
+  getGET(key) {
+    return this.isInGET(key) ? this.queryObject[key] : undefined
   }
   static wrap(request, socket = false) {
     return new Promise(
