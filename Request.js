@@ -33,9 +33,9 @@ class Request {
   get queryObject() {
     return this.parsedURL.query
   }
-  get body() {
-    return this._parsedBody || null
-  }
+  // get body() {
+  //   return this._parsedBody || null
+  // }
   isInPath(component) {
     return this.pathArray.includes(component.toString())
   }
@@ -62,6 +62,35 @@ class Request {
   getGET(key) {
     return this.isInGET(key) ? this.queryObject[key] : undefined
   }
+  parseBody(body, type = '') {
+    this.body = body
+    let typeArray = type.trim().split(';')
+    switch (typeArray[0]) {
+      case 'application/json':
+      case 'json':
+        try {
+          this.bodyObject = JSON.parse(body.toString())
+        } catch (e) {
+          this.bodyObject = {}
+        }
+        break
+      case 'object':
+        Object.assign(this.bodyObject, body)
+        break
+      case 'multipart/form-data':
+        try {
+          let boundary = multipart.getBoundary(type)
+          this.files = multipart.Parse(body, boundary)
+        } catch (e) {
+          this.files = []
+        }
+        break
+      case 'application/x-www-form-urlencoded':
+      default:
+        this.bodyObject = QueryString.parse(body.toString())
+        break
+    }
+  }
   static wrap(request, socket = false) {
     return new Promise(
       resolve => {
@@ -78,7 +107,7 @@ class Request {
 
           request = new this(request, socket)
 
-          // request.parseBody(Buffer.concat(body), request.headers['content-type'])
+          request.parseBody(Buffer.concat(body), request.headers['content-type'])
 
           resolve(request)
 
