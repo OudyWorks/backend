@@ -2,10 +2,11 @@ const http = require('http'),
   WebSocket = require('ws'),
   Application = require('./Application'),
   Request = require('./Request'),
-  Response = require('./Response')
+  Response = require('./Response'),
+  URL = require('url')
 
 class Server {
-  constructor(port, hostname, websocket = true, application = undefined) {
+  constructor(port, hostname, websocket = false, application = undefined) {
     this.port = port
     this.hostname = hostname
     this.websocket = websocket
@@ -17,12 +18,24 @@ class Server {
         this.request(request, response)
       }
     )
-    this.server.on(
-      'upgrade',
-      (request, socket, head) => {
-
+    if (this.websocket) {
+      this.constructor.wsServers = {
+        '/': this.wsServer = new WebSocket.Server({
+          noServer: true
+        })
       }
-    )
+      this.server.on(
+        'upgrade',
+        (request, socket, head) => {
+          this.upgrade(request, socket, head)
+        }
+      )
+      this.wsServer.on(
+        'connection',
+        (response, request) =>
+          this.request(request, response, true)
+      )
+    }
     this.constructor.Application.load(process.cwd())
     this.server.listen(port, hostname)
   }
@@ -53,7 +66,17 @@ class Server {
     )
   }
   async upgrade(request, socket, head) {
-    // response.end('Hellooo')
+    let url = URL.parse(request.url).pathname
+    if (this.constructor.wsServers[url])
+      this.constructor.wsServers[url].handleUpgrade(
+        request,
+        socket,
+        head,
+        ws =>
+          this.constructor.wsServers[url].emit('connection', ws, request)
+      )
+    else
+      socket.destroy()
   }
   async process(application, request, response) {
 

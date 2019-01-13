@@ -1,4 +1,6 @@
 const recursiveReadSync = require('recursive-readdir-sync'),
+  fs = require('fs'),
+  path = require('path'),
   Renderer = require('./Renderer')
 
 const componentRegex = /components\/([0-9a-zA-Z.]+)(\/tasks\/([0-9a-zA-Z.]+))?\/controller\.js$/,
@@ -73,17 +75,20 @@ class Application {
   async route(request, response) {
     return trigger(this.constructor, 'beforeRoute', [this, request, response]).then(
       () =>
-        Promise.race(
-          this.constructor.routes.map(
-            route =>
-              new Promise(
-                resolve =>
-                  Promise.resolve(route.url.test(request.path)).then(
-                    isMatched =>
-                      isMatched && resolve(route)
-                  )
-              )
-          )
+        new Promise(
+          (resolve, reject) => {
+            for (let i = 0; i < this.constructor.routes.length; i++) {
+              if (this.constructor.routes[i].url.test(request.path)) {
+                resolve(this.constructor.routes[i])
+                break
+              }
+            }
+            resolve({
+              component: 'error',
+              task: 'default',
+              code: 4040
+            })
+          }
         )
     ).then(
       route =>
@@ -117,8 +122,14 @@ class Application {
   }
 
   static load(directory) {
-    let files = recursiveReadSync(directory)
+    let files = this.files = recursiveReadSync(path.join(directory, 'components'))
     console.log('Loading Application in', directory)
+    if (fs.existsSync(path.join(directory, 'application.config.js')))
+      try {
+        loadRoutesAndTriggers(this, require(path.join(directory, 'application.config.js')), 'config', 'default')
+      } catch (error) {
+        console.log(error)
+      }
     files.forEach(
       file => {
 
@@ -158,7 +169,19 @@ class Application {
 
 }
 
-Application.components = {}
+Application.components = {
+  error: {
+    default: {
+      async run(application, request, response, { code }, payload) {
+        response.statusCode = 404
+        return {
+          code,
+          error: 'Route not found'
+        }
+      }
+    }
+  }
+}
 Application.modules = {}
 
 Application.routes = []
@@ -169,5 +192,6 @@ triggers.forEach(trigger => {
 })
 
 Application.Renderer = Renderer
+Application.loadRoutesAndTriggers = loadRoutesAndTriggers
 
 module.exports = Application

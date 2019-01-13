@@ -25,6 +25,7 @@ program
   .description('serve the project')
   .option('-p, --port <n>', 'Port', 8080)
   .option('-h, --host [value]', 'Host', 'localhost')
+  .option('-w, --websocket', 'WebSocket')
   .action(function (args) {
     console.log('Serve')
     require('./serve')(args)
