@@ -6,7 +6,7 @@
   "scripts": {},
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@oudy/entity": "^1.0.4"
+  "peerDependencies": {
+    "@oudy/entity": "1.0"
   }
 }
