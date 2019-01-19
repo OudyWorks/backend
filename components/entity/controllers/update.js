@@ -4,7 +4,7 @@ module.exports = function (routes) {
       let Entity = routes[request.pathArray[1]],
         singular = Entity.name.toLowerCase(),
         id = request.nextInPath(singular),
-        state = request.getPOST(singular)
+        state = request.getPOST(singular) || {}
 
       return Entity.load(
         id
