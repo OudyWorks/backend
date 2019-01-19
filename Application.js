@@ -6,6 +6,8 @@ const recursiveReadSync = require('recursive-readdir-sync'),
 const componentRegex = /components\/([0-9a-zA-Z.]+)(\/tasks\/([0-9a-zA-Z.]+))?\/controller\.js$/,
   // moduleRegex = /modules\/([0-9a-zA-Z.]+)\/controller\.js$/,
   triggers = [
+    'beforeStart',
+    'afterStart',
     'beforeInitiate',
     'initiate',
     'afterInitiate',
@@ -193,5 +195,6 @@ triggers.forEach(trigger => {
 
 Application.Renderer = Renderer
 Application.loadRoutesAndTriggers = loadRoutesAndTriggers
+Application.trigger = trigger
 
 module.exports = Application

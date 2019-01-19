@@ -10,7 +10,7 @@ class Server {
     this.port = port
     this.hostname = hostname
     this.websocket = websocket
-    this.application = application || Application
+    this.application = application || this.constructor.Application
     this.server = http.createServer()
     this.server.on(
       'request',
@@ -36,14 +36,28 @@ class Server {
           this.request(request, response, true)
       )
     }
-    this.constructor.Application.load(process.cwd())
-    this.server.listen(port, hostname)
+    this.application.load(process.cwd())
+    this.application.trigger(
+      this.application,
+      'beforeStart',
+      [this]
+    ).then(
+      () =>
+        this.server.listen(port, hostname)
+    ).then(
+      () =>
+        this.application.trigger(
+          this.application,
+          'afterStart',
+          [this]
+        )
+    )
   }
   async request(request, response, socket = false) {
     return Request.wrap(request, socket).then(
       async request => {
         response = Response.wrap(response)
-        let application = new this.constructor.Application(socket)
+        let application = new this.application(socket)
         await application.initiate(request, response)
         if (socket)
           response.on(
