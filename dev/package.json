@@ -4,7 +4,7 @@
   "description": "",
   "main": "application.config.js",
   "scripts": {
-    "serve": "backend serve"
+    "serve": "backend serve -w"
   },
   "author": "",
   "license": "ISC",
