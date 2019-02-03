@@ -4,5 +4,4 @@ const Server = require('../Server'),
 module.exports = function({port, host, websocket}) {
   console.log(port, host, websocket)
   new Server(port, host, websocket)
-  console.log('Ready')
 }

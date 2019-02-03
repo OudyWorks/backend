@@ -18,7 +18,7 @@ class Renderer {
       response.statusCode = 200
 
     if (typeof payload == 'object')
-      payload = JSON.stringify(payload, null, pretty ? 4 : 0)
+      payload = JSON.stringify(payload, null, pretty ? 2 : 0)
 
     response.setHeader('Content-Type', 'application/json')
 

@@ -1,5 +1,6 @@
 const recursiveReadSync = require('recursive-readdir-sync'),
   path = require('path'),
+  fs = require('fs'),
   {
     $pluralName
   } = require('@oudy/entity'),
@@ -11,6 +12,9 @@ const recursiveReadSync = require('recursive-readdir-sync'),
 
 module.exports = {
   use(Application) {
+
+    if (!fs.existsSync(path.join(process.cwd(), 'types')))
+      return
 
     let files = recursiveReadSync(
       path.join(process.cwd(), 'types')

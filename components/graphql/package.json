@@ -1,0 +1,17 @@
+{
+  "name": "@oudy/backend-component-graphql",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@oudy/graphql-entity": "1.0"
+  },
+  "dependencies": {
+    "@oudy/graphql-entity": "^1.0.7",
+    "apollo-server-core": "^2.1.0",
+    "subscriptions-transport-ws": "^0.9.15"
+  }
+}
