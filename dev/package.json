@@ -13,6 +13,7 @@
     "@oudy/backend-component-entity": "^1.0.5",
     "@oudy/backend-component-graphql": "^1.0.0",
     "@oudy/entity-mongodb": "^1.0.7",
+    "falzy": "^0.23.0",
     "graphql-redis-subscriptions": "^2.0.0"
   }
 }

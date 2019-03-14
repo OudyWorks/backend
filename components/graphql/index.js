@@ -20,7 +20,7 @@ const {
   fs = require('fs')
 
 module.exports = {
-  use(Application) {
+  use(Application, options = {}) {
 
     let files = [
       'types', 'queries', 'mutations', 'subscriptions'
@@ -120,10 +120,12 @@ module.exports = {
           return new GraphQLSchema(schema)
         }
       )(),
-      server = new ApolloServerBase({
-        schema
-      }),
-      options = server.graphQLServerOptions(),
+      server = new ApolloServerBase(Object.assign(
+        options,
+        {
+          schema
+        }
+      )),
       ss = new SubscriptionServer(
         {
           execute, subscribe, schema: server.schema
@@ -132,6 +134,8 @@ module.exports = {
           noServer: true
         }
       )
+
+    options = server.graphQLServerOptions()
 
     Application.triggers.beforeStart.push(
       async (server) => {

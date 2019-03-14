@@ -1,6 +1,6 @@
 {
   "name": "@oudy/backend-component-entity",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {},
@@ -8,5 +8,8 @@
   "license": "ISC",
   "peerDependencies": {
     "@oudy/entity": "1.0"
+  },
+  "dependencies": {
+    "falzy": "^0.23.0"
   }
 }

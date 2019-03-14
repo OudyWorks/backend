@@ -7,7 +7,7 @@ const recursiveReadSync = require('recursive-readdir-sync'),
 
   listController = require('./controllers/list'),
   loadController = require('./controllers/load'),
-
+  ID = '[\\w-.:]+',
   typeRegex = /types[\\\/][a-zA-Z0-9]+.js$/
 
 module.exports = {
@@ -48,7 +48,7 @@ module.exports = {
 
     Application.routes.push(
       {
-        url: new RegExp(`^\/(${singulars.join('|')})\/[0-9a-fA-F]{24}$`),
+        url: new RegExp(`^\/(${singulars.join('|')})\/${ID}$`),
         component: 'entity',
         task: 'load',
       },

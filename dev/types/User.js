@@ -1,4 +1,4 @@
-const Entity = require('@oudy/entity-mongodb'),
+const {$context} = Entity = require('@oudy/entity-mongodb'),
   {
     GraphQLObjectType,
     GraphQLID,
@@ -33,13 +33,15 @@ User[$type] = new GraphQLObjectType({
   }
 })
 
-User[$pubsub] = new RedisPubSub({
-  connection: {
-      // keyPrefix: 'crawlo:shepherd:',
-      port: 6379,
-      retry_strategy: options =>
-          Math.max(options.attempt * 100, 3000)
-  }
-})
+// User[$pubsub] = new RedisPubSub({
+//   connection: {
+//       // keyPrefix: 'crawlo:shepherd:',
+//       port: 6379,
+//       retry_strategy: options =>
+//           Math.max(options.attempt * 100, 3000)
+//   }
+// })
+
+User[$context] = ['account', 'device']
 
 module.exports = User

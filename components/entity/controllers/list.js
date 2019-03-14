@@ -1,4 +1,5 @@
-const updateController = require('./update')
+const updateController = require('./update'),
+  falzy = require('falzy')
 
 module.exports = function (routes) {
   const _updateController = updateController(routes)
@@ -11,7 +12,24 @@ module.exports = function (routes) {
       let Entity = routes[request.pathArray[1]],
         {
           query = '{}', limit = 20, page = 1, sort = '{}'
-        } = request.queryObject
+        } = request.queryObject,
+        context = {},
+        missingContext = []
+
+      Entity[Entity.$context].forEach(
+        key =>
+          context[key] = request.getGET(key)
+      )
+
+      missingContext = Entity[Entity.$context].filter(
+        key =>
+          falzy(context[key])
+      )
+
+      if(missingContext.length)
+        return {
+          error: 'Missing context: '+missingContext.join()
+        }
 
       try {
 
@@ -24,9 +42,12 @@ module.exports = function (routes) {
         return Promise.reject(error)
       }
 
-      return Entity.loadAll({
-        query, limit, page, sort
-      })
+      return Entity.loadAll(
+        {
+          query, limit, page, sort
+        },
+        context
+      )
     }
   }
 }
