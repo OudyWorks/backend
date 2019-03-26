@@ -1,7 +1,8 @@
 const recursiveReadSync = require('recursive-readdir-sync'),
   fs = require('fs'),
   path = require('path'),
-  Renderer = require('./Renderer')
+  Renderer = require('./Renderer'),
+  Route = require('./Route')
 
 const componentRegex = /components\/([0-9a-zA-Z.]+)(\/tasks\/([0-9a-zA-Z.]+))?\/controller\.js$/,
   // moduleRegex = /modules\/([0-9a-zA-Z.]+)\/controller\.js$/,
@@ -81,7 +82,7 @@ class Application {
           (resolve, reject) => {
             for (let i = 0; i < this.constructor.routes.length; i++) {
               if (this.constructor.routes[i].url.test(request.path)) {
-                resolve(this.constructor.routes[i])
+                resolve(new Route(this.constructor.routes[i]))
                 break
               }
             }
@@ -174,11 +175,11 @@ class Application {
 Application.components = {
   error: {
     default: {
-      async run(application, request, response, { code }, payload) {
+      async run(application, request, response, { code, error = 'Route not found' }, payload) {
         response.statusCode = 404
         return {
           code,
-          error: 'Route not found'
+          error
         }
       }
     }
