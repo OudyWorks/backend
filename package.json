@@ -1,6 +1,6 @@
 {
   "name": "@oudy/backend",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "backend framework",
   "main": "index.js",
   "scripts": {},
@@ -31,7 +31,7 @@
     "commander": "^2.19.0",
     "cookie": "^0.3.1",
     "cookie-signature": "^1.1.0",
-    "recursive-readdir-sync": "^1.0.6",
+    "fast-glob": "^2.2.6",
     "utils-merge": "^1.0.1",
     "ws": "^6.1.2"
   }

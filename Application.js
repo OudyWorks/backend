@@ -1,4 +1,4 @@
-const recursiveReadSync = require('recursive-readdir-sync'),
+const fg = require('fast-glob'),
   fs = require('fs'),
   path = require('path'),
   Renderer = require('./Renderer'),
@@ -80,17 +80,14 @@ class Application {
       () =>
         new Promise(
           (resolve, reject) => {
-            for (let i = 0; i < this.constructor.routes.length; i++) {
-              if (this.constructor.routes[i].url.test(request.path)) {
-                resolve(new Route(this.constructor.routes[i]))
-                break
-              }
-            }
-            resolve({
+            for (let i = 0; i < this.constructor.routes.length; i++)
+              if (this.constructor.routes[i].url.test(request.path))
+                return resolve(new Route(this.constructor.routes[i]))
+            resolve(new Route({
               component: 'error',
               task: 'default',
               code: 4040
-            })
+            }))
           }
         )
     ).then(
@@ -125,7 +122,20 @@ class Application {
   }
 
   static load(directory) {
-    let files = this.files = recursiveReadSync(path.join(directory, 'components'))
+    let files = this.files = fg.sync(
+      [
+        'components/*/controller.js',
+        'components/*/tasks/*/controller.js',
+
+      ],
+      {
+        cwd: directory,
+
+      }
+    ).map(
+      controller =>
+        path.join(directory, controller)
+    )
     console.log('Loading Application in', directory)
     if (fs.existsSync(path.join(directory, 'application.config.js')))
       try {
@@ -136,33 +146,32 @@ class Application {
     files.forEach(
       file => {
 
-        let match = file.match(componentRegex)
-        if (match) {
-          let [, component, , task = 'default'] = match
-          console.log(component, task)
+        const match = file.match(componentRegex),
+          [, component, , task = 'default'] = match
 
-          if (!this.components[component])
-            this.components[component] = {}
+        console.log(component, task)
 
-          try {
+        if (!this.components[component])
+          this.components[component] = {}
 
-            this.components[component][task] = require(file)
+        try {
 
-            this.components[component][task] = this.components[component][task].default || this.components[component][task]
+          this.components[component][task] = require(file)
 
-            if (!this.components[component][task])
-              throw 'Undefined'
+          this.components[component][task] = this.components[component][task].default || this.components[component][task]
 
-            loadRoutesAndTriggers(this, this.components[component][task], component, task)
+          if (!this.components[component][task])
+            throw 'Undefined'
 
-          } catch (error) {
+          loadRoutesAndTriggers(this, this.components[component][task], component, task)
 
-            delete this.components[component][task]
+        } catch (error) {
 
-            console.log(`Something is wrong in ${component}.${task}'s Controller`)
-            throw Error(error)
+          delete this.components[component][task]
 
-          }
+          console.log(`Something is wrong in ${component}.${task}'s Controller`)
+          throw Error(error)
+
         }
 
       }
