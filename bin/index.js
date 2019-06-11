@@ -1,5 +1,55 @@
 #!/usr/bin/env node
 
+const path = require('path')
+
+global._import = function(path) {
+  const module = require(path)
+  return module.default || module
+}
+
+require('@babel/register')({
+  // rootMode: 'upward',
+  ignore: [
+    /node_modules\/(?!@oudy)/
+  ],
+  presets: [
+    [
+      require('@babel/preset-env').default,
+      {
+        targets: {
+          node: process.versions.node
+        },
+      }
+    ],
+  ],
+  plugins: [
+    [
+      require('babel-plugin-module-resolver'),
+      {
+        root: process.cwd(),
+        alias: [
+          'components',
+          'libraries',
+          'types',
+        ].reduce(
+          (alias, file) =>
+            Object.assign(
+              alias,
+              {
+                [file]: `./${file}`
+              }
+            ),
+          {
+            // '^@babel/run': (args) => console.log('args', args)
+          }
+        )
+      }
+    ],
+    require('@babel/plugin-syntax-dynamic-import').default,
+    require('babel-plugin-dynamic-import-node'),
+  ]
+})
+
 const chalk = require('chalk'),
   program = require('commander')
 

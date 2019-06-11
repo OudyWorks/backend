@@ -1,5 +1,5 @@
 const URL = require('url'),
-  QueryString = require('querystring')
+  QueryString = require('qs')
 
 class Request {
   constructor(request, socket = false) {

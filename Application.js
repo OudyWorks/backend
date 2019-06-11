@@ -126,20 +126,17 @@ class Application {
       [
         'components/*/controller.js',
         'components/*/tasks/*/controller.js',
-
       ],
       {
         cwd: directory,
-
+        absolute: true
       }
-    ).map(
-      controller =>
-        path.join(directory, controller)
     )
     console.log('Loading Application in', directory)
     if (fs.existsSync(path.join(directory, 'application.config.js')))
       try {
-        loadRoutesAndTriggers(this, require(path.join(directory, 'application.config.js')), 'config', 'default')
+        const config = require(path.join(directory, 'application.config.js'))
+        loadRoutesAndTriggers(this, config.default || config, 'config', 'default')
       } catch (error) {
         console.log(error)
       }
@@ -187,6 +184,7 @@ Application.components = {
       async run(application, request, response, { code, error = 'Route not found' }, payload) {
         response.statusCode = 404
         return {
+          ...payload,
           code,
           error
         }

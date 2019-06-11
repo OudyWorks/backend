@@ -1,0 +1,14 @@
+{
+  "name": "@oudy/backend-component-static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {},
+  "dependencies": {
+    "etag": "^1.8.1",
+    "mime": "^2.4.3"
+  }
+}

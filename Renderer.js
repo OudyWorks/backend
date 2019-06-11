@@ -17,10 +17,10 @@ class Renderer {
     if (suppress)
       response.statusCode = 200
 
-    if (typeof payload == 'object')
+    if (typeof payload == 'object') {
       payload = JSON.stringify(payload, null, pretty ? 2 : 0)
-
-    response.setHeader('Content-Type', 'application/json')
+      response.setHeader('Content-Type', 'application/json')
+    }
 
     readable._read = function noop() { }
     readable.push(payload)

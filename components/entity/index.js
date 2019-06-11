@@ -11,7 +11,7 @@ const recursiveReadSync = require('recursive-readdir-sync'),
   typeRegex = /types[\\\/][a-zA-Z0-9]+.js$/
 
 module.exports = {
-  use(Application) {
+  use(Application = require('@oudy/backend/Application')) {
 
     if (!fs.existsSync(path.join(process.cwd(), 'types')))
       return
