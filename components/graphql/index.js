@@ -1,25 +1,27 @@
-const {
+import {
   ApolloServerBase,
   runHttpQuery,
   convertNodeHttpToRequest
-} = require('apollo-server-core'),
-  {
-    SubscriptionServer
-  } = require('subscriptions-transport-ws'),
-  {
-    execute,
-    subscribe,
-    GraphQLSchema,
-    GraphQLObjectType
-  } = require('@oudy/graphql'),
-  {
-    $query, $listQuery, $mutation, $subscription
-  } = require('@oudy/graphql-entity'),
-  fg = require('fast-glob'),
-  path = require('path'),
-  fs = require('fs')
+} from 'apollo-server-core'
+import {
+  SubscriptionServer
+} from 'subscriptions-transport-ws'
+import {
+  execute,
+  subscribe,
+  GraphQLSchema,
+  GraphQLObjectType
+} from '@oudy/graphql'
+import {
+  $query,
+  $listQuery,
+  $mutation,
+  $subscription
+} from '@oudy/graphql-entity'
+import fg from 'fast-glob'
+import path from 'path'
 
-module.exports = {
+export default {
   use(Application = require('@oudy/backend/Application'), options = {}) {
 
     let files = [
@@ -166,6 +168,5 @@ module.exports = {
         )
       }
     )
-
   }
 }
