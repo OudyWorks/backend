@@ -1,15 +1,11 @@
 {
-  "name": "@oudyworks/backend",
-  "version": "1.0.14",
+  "name": "@oudy/backend",
+  "version": "1.0.7",
   "description": "backend framework",
   "main": "index.js",
   "scripts": {},
   "bin": {
-    "backend-create": "bin/create.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OudyWorks/backend.git"
+    "backend": "bin/index.js"
   },
   "keywords": [
     "nodejs",
@@ -19,6 +15,10 @@
     "http",
     "json"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OudyWorks/backend.git"
+  },
   "author": "Ayoub Oudmane <ayoub@Oudmane.me>",
   "license": "ISC",
   "bugs": {
@@ -26,25 +26,24 @@
   },
   "homepage": "https://github.com/OudyWorks/backend#readme",
   "dependencies": {
-    "accepts": "^1.3.5",
-    "body-parser": "^1.18.3",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "@babel/runtime": "^7.4.4",
+    "babel-plugin-dynamic-import-node": "^2.2.0",
+    "babel-plugin-module-resolver": "^3.2.0",
     "booleanify": "^1.0.0",
-    "colors": "^1.3.1",
-    "cookie": "^0.3.1",
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "cookie": "^0.4.0",
     "cookie-signature": "^1.1.0",
-    "express": "^4.16.3",
-    "lodash.clonedeep": "^4.5.0",
-    "parse-multipart": "^1.0.4",
-    "qs": "^6.5.2",
-    "recursive-readdir-sync": "^1.0.6",
-    "shelljs": "^0.8.2",
+    "fast-glob": "^2.2.6",
+    "qs": "^6.7.0",
     "utils-merge": "^1.0.1",
-    "ws": "^5.2.2"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-module-resolver": "^3.1.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1"
+    "vue": "^2.6.10",
+    "ws": "^6.1.2"
   }
 }
