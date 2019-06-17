@@ -10,13 +10,14 @@ import path from 'path'
 import {
   createBundleRenderer
 } from 'vue-server-renderer'
+import accepts from 'accepts'
 
 class VueRenderer extends Renderer {
   static use(
     Application = require('@oudy/backend/Application'),
-    directory = process.cwd(),
     options = {}
   ) {
+    options.directory = options.directory || process.cwd()
     options.webpack = options.webpack || {}
     const routes = fg.sync(
       [
@@ -24,7 +25,7 @@ class VueRenderer extends Renderer {
         'components/*/tasks/*/route.js',
       ],
       {
-        cwd: directory,
+        cwd: options.directory,
         absolute: true
       }
     ),
@@ -33,13 +34,13 @@ class VueRenderer extends Renderer {
           'modules/*.js',
         ],
         {
-          cwd: directory,
+          cwd: options.directory,
           absolute: true
         }
       ),
       mfs = new MemoryFileSystem(),
-      routesFile = path.join(directory, 'application.routes.js'),
-      modulesFile = path.join(directory, 'application.modules.js')
+      routesFile = path.join(options.directory, 'application.routes.js'),
+      modulesFile = path.join(options.directory, 'application.modules.js')
     mfs.mkdirpSync(path.dirname(routesFile))
     mfs.writeFileSync(
       routesFile,
@@ -54,7 +55,7 @@ class VueRenderer extends Renderer {
       modulesFile,
       `module.exports = {
   ${modules.map(
-      module =>
+        module =>
           `'${path.basename(module).replace(path.extname(module), '')}': require('${module}')`
       ).join(',\n')}
 }`
@@ -66,7 +67,7 @@ class VueRenderer extends Renderer {
       modules,
       fs,
       mfs,
-      directory,
+      directory: options.directory,
       publicPath: '/static/'
     },
       _bundle = webpack(merge(
@@ -74,6 +75,14 @@ class VueRenderer extends Renderer {
         {
           entry: {
             app: require.resolve('./application/bundle.js')
+          },
+          resolve: {
+            alias: [
+              {
+                name: '@app',
+                alias: require.resolve(options.ssr ? './application/app.js' : './application/loader.js')
+              }
+            ]
           }
         },
         options.webpack
@@ -110,10 +119,25 @@ class VueRenderer extends Renderer {
       }
     )
     Application.Renderer = VueRenderer
+    Application.triggers.beforeInitiate.push(
+      async (application, request, response) => {
+        request.accept = accepts(request).type(['json', 'html'])
+      }
+    )
   }
   static async render(application, request, response, route, payload) {
     let context = { application, request, response, route, payload }
+
+    if (request.accept == 'json')
+      return super.render(application, request, response, route, payload)
+
     context.state = payload
+    if (!context.state.meta)
+      context.state.meta = {}
+    if (!context.state.meta.htmlAttrs)
+      context.state.meta.htmlAttrs = {}
+    if (request.ssr)
+      context.state.meta.htmlAttrs['data-vue-meta-server-rendered'] = true
     return VueRenderer.renderer.renderToString(
       context
     ).then(
@@ -123,12 +147,14 @@ class VueRenderer extends Renderer {
           title, htmlAttrs, headAttrs, bodyAttrs, link,
           style, script, noscript, meta
         } = context.meta.inject()
+        if (!request.ssr)
+          html = html.replace(' data-server-rendered="true"', '')
         return super.render(
           application,
           request,
           response,
           route,
-          `<!doctype html><html data-vue-meta-server-rendered ${htmlAttrs.text()}><head ${headAttrs.text()}>${context.renderResourceHints()}${context.renderStyles()}${meta.text()}${title.text()}${link.text()}${style.text()}${script.text()}${noscript.text()}</head><body ${bodyAttrs.text()}><div id="app">${html}</div>${context.renderState()}${context.renderScripts()}${script.text({ body: true })}</body></html>`
+          `<!doctype html><html ${htmlAttrs.text()}><head ${headAttrs.text()}>${context.renderResourceHints()}${context.renderStyles()}${meta.text()}${title.text()}${link.text()}${style.text()}${script.text()}${noscript.text()}</head><body ${bodyAttrs.text()}>${html}${context.renderState()}${context.renderScripts()}${script.text({ body: true })}</body></html>`
         )
       }
     ).catch(
@@ -140,4 +166,4 @@ class VueRenderer extends Renderer {
   }
 }
 
-module.exports = VueRenderer
+export default VueRenderer

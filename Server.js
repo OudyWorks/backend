@@ -1,7 +1,8 @@
+import Request from './Request'
+
 const http = require('http'),
   WebSocket = require('ws'),
   Application = require('./Application'),
-  Request = require('./Request'),
   Response = require('./Response'),
   URL = require('url')
 

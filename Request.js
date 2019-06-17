@@ -1,5 +1,11 @@
-const URL = require('url'),
-  QueryString = require('qs')
+import URL from 'url'
+import QueryString from 'qs'
+import cookie from 'cookie'
+import {
+  unsign
+} from 'cookie-signature'
+
+const cookieSignature = process.env.BACKEND_COOKIE_SIGNATURE
 
 class Request {
   constructor(request, socket = false) {
@@ -33,9 +39,23 @@ class Request {
   get queryObject() {
     return this.parsedURL.query
   }
-  // get body() {
-  //   return this._parsedBody || null
-  // }
+  get cookies() {
+    if (this._cookies)
+      return this._cookies
+    this._cookies = cookie.parse(this.headers.cookie || '')
+    Object.keys(this._cookies).forEach(
+      key => {
+        if (this._cookies[key].match(/^s:/))
+          this._cookies[key] = unsign(this._cookies[key].replace(/^s:/, ''), cookieSignature) || this._cookies[key]
+        if (this._cookies[key].match(/^j:/))
+          this._cookies[key] = JSON.parse(this._cookies[key].replace(/^j:/, ''))
+      }
+    )
+    return this._cookies
+  }
+  getCookie(cookie) {
+    return this.cookies[cookie]
+  }
   isInPath(component) {
     return this.pathArray.includes(component.toString())
   }
@@ -124,4 +144,4 @@ class Request {
   }
 }
 
-module.exports = Request
+export default Request

@@ -38,7 +38,7 @@
     "booleanify": "^1.0.0",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
-    "cookie": "^0.3.1",
+    "cookie": "^0.4.0",
     "cookie-signature": "^1.1.0",
     "fast-glob": "^2.2.6",
     "qs": "^6.7.0",

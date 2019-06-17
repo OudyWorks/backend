@@ -1,7 +1,8 @@
 const merge = require('utils-merge'),
   cookie = require('cookie'),
   {sign} = require('cookie-signature'),
-  Server = require('./Server')
+  Server = require('./Server'),
+  cookieSignature = process.env.BACKEND_COOKIE_SIGNATURE
 
 class Response {
   static wrap(response) {
@@ -25,8 +26,8 @@ class Response {
 
           value = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
-          if (options.signed && Server.cookieSignature)
-            value = 's:' + sign(value, Server.cookieSignature)
+          if (options.signed && cookieSignature)
+            value = 's:' + sign(value, cookieSignature)
 
           this.appendHeader('Set-Cookie', cookie.serialize(key, value, options))
 

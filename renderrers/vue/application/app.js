@@ -9,12 +9,10 @@ try {
     Vue.component(
       'layout',
       layout.default || layout
-      // () =>
-      //   import(/* webpackChunkName: "layout" */ '@layout')
     )
   }
 } catch (error) {
-  console.log(error)
+  // console.log(error)
 }
 
 try {
@@ -52,7 +50,7 @@ export default context => ({
     router,
     store,
     render(h) {
-      return <layout></layout>
+      return <layout id="app"></layout>
     },
     meta() {
       return {

@@ -7,7 +7,7 @@ class Renderer {
     if (response.finished)
       return null
 
-    if (typeof payload.pipe === 'function' || application.socket)
+    if (application.socket)
       return payload
 
     let readable = new Readable(),
