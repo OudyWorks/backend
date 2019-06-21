@@ -2,13 +2,14 @@ import Vue from 'vue'
 import router from '@router'
 import store from '@store'
 import meta from '@meta'
+import i18n from '@i18n'
 
 try {
   if (require.resolveWeak('@layout')) {
-    const layout = require('@layout')
+    const _layout = require('@layout')
     Vue.component(
       'layout',
-      layout.default || layout
+      _layout.__esModule ? _layout.default : _layout
     )
   }
 } catch (error) {
@@ -22,7 +23,7 @@ try {
       module =>
         Vue.component(
           `module-${module}`,
-          modules[module].default || modules[module]
+          modules[module].__esModule ? modules[module].default : modules[module]
         )
     )
   }
@@ -49,6 +50,7 @@ export default context => ({
     name: 'application',
     router,
     store,
+    i18n,
     render(h) {
       return <layout id="app"></layout>
     },
@@ -62,5 +64,6 @@ export default context => ({
     }
   }),
   router,
-  store
+  store,
+  i18n
 })

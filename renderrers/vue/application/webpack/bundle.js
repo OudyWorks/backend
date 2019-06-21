@@ -19,10 +19,11 @@ export default options =>
             exclude: /node_modules/,
             options: {
               presets: [
-                require.resolve('@babel/preset-env')
+                require.resolve('@babel/preset-env'),
+                require.resolve('@vue/babel-preset-jsx'),
               ],
               plugins: [
-                require.resolve('babel-plugin-transform-vue-jsx'),
+                // require.resolve('@babel/plugin-transform-modules-commonjs'),
                 require.resolve('@babel/plugin-syntax-dynamic-import'),
                 // require.resolve('babel-plugin-dynamic-import-webpack'),
                 // require.resolve('@vue/cli-plugin-babel')

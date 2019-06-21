@@ -4,5 +4,5 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  // state: {}
+  state: typeof window != 'undefined' && window.__INITIAL_STATE__ || {}
 })

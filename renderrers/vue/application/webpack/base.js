@@ -22,9 +22,13 @@ export default options => ({
       {
         name: '@modules',
         alias: options.modulesFile
-      }
+      },
+      {
+        name: '@locales',
+        alias: options.localesFile
+      },
     ].concat(
-      ['router', 'store', 'meta'].map(
+      ['router', 'store', 'meta', 'i18n'].map(
         file => ({
           name: `@${file}`,
           alias: path.resolve(__dirname, `../${file}`)
@@ -51,7 +55,7 @@ export default options => ({
     {
       apply(compiler) {
         compiler.hooks.beforeRun.tap('Application', (compilation, callback) => {
-          ['routes', 'modules'].forEach(
+          ['routes', 'modules', 'locales'].forEach(
             type => {
               compiler.inputFileSystem._statStorage.data.set(
                 options[type+'File'],

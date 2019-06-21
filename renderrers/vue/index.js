@@ -38,18 +38,42 @@ class VueRenderer extends Renderer {
           absolute: true
         }
       ),
+      locales = fg.sync(
+        [
+          'components/*/i18n/*.{js,json}',
+          'components/*/tasks/*/i18n/*.{js,json}',
+        ],
+        {
+          cwd: options.directory,
+          absolute: true
+        }
+      ),
       mfs = new MemoryFileSystem(),
       routesFile = path.join(options.directory, 'application.routes.js'),
-      modulesFile = path.join(options.directory, 'application.modules.js')
+      modulesFile = path.join(options.directory, 'application.modules.js'),
+      localesFile = path.join(options.directory, 'application.locales.js'),
+      componentsRegex = /components\/(.*?)\/(tasks\/(.*?)\/)?route.js/,
+      localesRegex = /components\/(.*?)\/(tasks\/(.*?)\/)?i18n\/(.*?)\.js/
     mfs.mkdirpSync(path.dirname(routesFile))
     mfs.writeFileSync(
       routesFile,
       `module.exports = [
   ${routes.map(
-        route =>
-          `require('${route}')`
+    file => {
+      const [, component, , task] = file.match(componentsRegex)
+      return {
+        file, component, task
+      }
+    }
+  ).map(
+        ({file, component, task}) =>
+          `{module: require('${file}'), component: '${component}', task: '${task || ''}'}`
       ).join(',\n')}
-].map(route => route.default || route)`
+].map(({module, component, task}) => ({module: module.__esModule ? module.default : module, component, task})).map(({module, component, task}) => {
+  module.name = module.component.name = [component, task].filter(k => k).join('-')
+  Object.assign(module.meta = module.meta || {}, {component, task})
+  return module
+})`
     )
     mfs.writeFileSync(
       modulesFile,
@@ -58,13 +82,39 @@ class VueRenderer extends Renderer {
         module =>
           `'${path.basename(module).replace(path.extname(module), '')}': require('${module}')`
       ).join(',\n')}
-}`
+}
+Object.keys(module.exports).forEach(function(key) {
+  module.exports[key] = module.exports[key].__esModule ? module.exports[key].default : module.exports[key]
+})`
+    )
+    mfs.writeFileSync(
+      localesFile,
+      `const flattenizer = require('${require.resolve('flattenizer')}');
+module.exports = {
+  ${locales.map(
+        file => {
+          const [, component, , task, language] = file.match(localesRegex)
+          return {
+            file, component, task, language
+          }
+        }
+      ).map(
+        ({ file, component, task, language }) =>
+          `'${[language, component, task].filter(k => k).join('.')}': require('${file}')`
+      ).join(',\n')}
+}
+Object.keys(module.exports).forEach(function(key) {
+  module.exports[key] = module.exports[key].__esModule ? module.exports[key].default : module.exports[key]
+})
+module.exports = flattenizer.unflatten(module.exports)`
     )
     const base = {
       routesFile,
       modulesFile,
+      localesFile,
       routes,
       modules,
+      locales,
       fs,
       mfs,
       directory: options.directory,

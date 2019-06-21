@@ -1,0 +1,15 @@
+{
+  "name": "@oudy/backend-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@oudy/drivers": "^1.0.1",
+    "form-serialize": "^0.7.2",
+    "jquery-param": "^1.0.1"
+  }
+}

@@ -32,10 +32,11 @@ export default options =>
                       ]
                     }
                   }
-                ]
+                ],
+                require.resolve('@vue/babel-preset-jsx'),
               ],
               plugins: [
-                require.resolve('babel-plugin-transform-vue-jsx'),
+                // require.resolve('@babel/plugin-transform-modules-commonjs'),
                 require.resolve('@babel/plugin-syntax-dynamic-import'),
               ]
             }

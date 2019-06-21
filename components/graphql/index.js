@@ -35,9 +35,12 @@ export default {
       async ({ directory, pattern }) => ({
         directory,
         pattern,
-        modules: await Promise.all(fg.sync([
-          path.join(process.cwd(), pattern)
-        ]).map(
+        modules: await Promise.all(fg.sync(
+          path.join(process.cwd(), pattern),
+          {
+            ignore: ['**/node_modules/**']
+          }
+        ).map(
           file => {
             try {
               return import(file).then(
