@@ -23,10 +23,27 @@ export default options =>
                 require.resolve('@vue/babel-preset-jsx'),
               ],
               plugins: [
-                // require.resolve('@babel/plugin-transform-modules-commonjs'),
-                require.resolve('@babel/plugin-syntax-dynamic-import'),
-                // require.resolve('babel-plugin-dynamic-import-webpack'),
-                // require.resolve('@vue/cli-plugin-babel')
+                [
+                  require('babel-plugin-module-resolver'),
+                  {
+                    root: options.directory,
+                    alias: [
+                      'components',
+                      'libraries',
+                      'types',
+                    ].reduce(
+                      (alias, file) =>
+                        Object.assign(
+                          alias,
+                          {
+                            [file]: `./${file}`
+                          }
+                        ),
+                      {}
+                    )
+                  }
+                ],
+                require.resolve('@babel/plugin-syntax-dynamic-import')
               ]
             }
           },

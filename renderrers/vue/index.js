@@ -159,7 +159,7 @@ module.exports = flattenizer.unflatten(module.exports)`
             VueRenderer.renderer = createBundleRenderer(
               JSON.parse(stats.compilation.assets['vue-ssr-server-bundle.json'].source()),
               {
-                runInNewContext: false,
+                runInNewContext: true,
                 clientManifest: JSON.parse(c_stats.compilation.assets['vue-ssr-client-manifest.json'].source())
               }
             )
@@ -177,7 +177,7 @@ module.exports = flattenizer.unflatten(module.exports)`
   }
   static async render(application, request, response, route, payload) {
     let context = { application, request, response, route, payload }
-
+    
     if (request.accept == 'json')
       return super.render(application, request, response, route, payload)
 

@@ -99,7 +99,6 @@ class Application {
   async load(request, response, route) {
 
     let payload = {}
-
     return trigger(this.constructor, 'beforeLoad', [this, request, response, route, payload]).then(
       () =>
         this.constructor.components[route.component][route.task].run(this, request, response, route, payload).then(

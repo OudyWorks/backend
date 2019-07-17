@@ -58,17 +58,17 @@ export default options => ({
           ['routes', 'modules', 'locales'].forEach(
             type => {
               compiler.inputFileSystem._statStorage.data.set(
-                options[type+'File'],
+                options[type + 'File'],
                 [
                   null,
-                  options.mfs.statSync(options[type+'File'])
+                  options.mfs.statSync(options[type + 'File'])
                 ]
               )
               compiler.inputFileSystem._readFileStorage.data.set(
-                options[type+'File'],
+                options[type + 'File'],
                 [
                   null,
-                  options.mfs.readFileSync(options[type+'File'])
+                  options.mfs.readFileSync(options[type + 'File'])
                 ]
               )
               options[type].forEach(

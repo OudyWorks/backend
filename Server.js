@@ -94,18 +94,16 @@ class Server {
       socket.destroy()
   }
   async process(application, request, response) {
-
-    let route = await application.route(request, response)
-
-    let payload = await application.load(request, response, route)
-
-    // response.end('Hellooo')
-
-    application.render(request, response, route, payload).then(
-      body =>
-        application.socket ? response.send(JSON.stringify({ id: request.id, response: body })) : (!response.finished && body.pipe(response))
+    return application.route(request, response).then(
+      route =>
+        application.load(request, response, route).then(
+          payload =>
+            application.render(request, response, route, payload).then(
+              body =>
+                application.socket ? response.send(JSON.stringify({ id: request.id, response: body })) : (!response.finished && body.pipe(response))
+            )
+        )
     )
-
   }
 }
 

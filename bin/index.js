@@ -39,9 +39,7 @@ require('@babel/register')({
                 [file]: `./${file}`
               }
             ),
-          {
-            // '^@babel/run': (args) => console.log('args', args)
-          }
+          {}
         )
       }
     ],
