@@ -14,7 +14,9 @@
     "fast-glob": "^3.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0"
