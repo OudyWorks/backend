@@ -1,11 +1,13 @@
 {
   "name": "@backend/cli",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.3",
   "description": "",
   "bin": {
     "backend": "index.js"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "babel src --out-dir npm"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

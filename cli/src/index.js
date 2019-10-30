@@ -35,10 +35,13 @@ program
   .option('-p, --port <n>', 'Port', 8080)
   .option('-h, --host [value]', 'Host', 'localhost')
   .option('-w, --websocket', 'WebSocket')
-  .action(function (args) {
+  .action(function ({
+    port,
+    host
+  }) {
     const server = new Server({
-        port: 8080,
-        host: 'localhost'
+        port,
+        host
       }),
       application = new Application({
         server,
