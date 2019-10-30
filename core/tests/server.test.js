@@ -11,11 +11,6 @@ const server = new Server({
     directory: __dirname,
     cookie: true
   })
-// console.log(app.server)
-server.server.listen(
-  server.port,
-  server.host
-)
+server.start()
     // expect(1 + 2).toBe(3)
-  // console.log(app.components)
 // })

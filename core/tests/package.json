@@ -1,0 +1,21 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@oudy/graphql": "^1.0.21",
+    "@oudy/graphql-entity": "^1.0.14",
+    "@oudy/mongodb": "^1.0.19",
+    "apollo-server-core": "^2.9.7",
+    "apollo-server-express": "^2.9.7",
+    "graphql": "^14.5.8",
+    "subscriptions-transport-ws": "^0.9.16"
+  }
+}
