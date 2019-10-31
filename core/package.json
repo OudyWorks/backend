@@ -6,7 +6,11 @@
   "scripts": {
     "build": "babel src --out-dir npm"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OudyWorks/backend.git"
+  },
+  "author": "Ayoub Oudmane",
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.4",
