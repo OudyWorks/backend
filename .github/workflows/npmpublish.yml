@@ -6,20 +6,20 @@ on:
       - "@backend"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - run: npm ci
-        working-directory: ./core
-      - run: npm run build
-        working-directory: ./core
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #     - run: npm ci
+  #       working-directory: ./core
+  #     - run: npm run build
+  #       working-directory: ./core
 
   publish-npm:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -30,6 +30,8 @@ jobs:
       - run: npm ci
         working-directory: ./core
       - run: npm run build
+        working-directory: ./core
+      - run: cp package.json npm/package.json
         working-directory: ./core
       - run: npm publish
         working-directory: ./core/npm
