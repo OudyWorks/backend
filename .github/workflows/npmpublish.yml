@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-          scope: 'OudyWorks'
+          scope: '@oudy'
       - run: npm ci
         working-directory: ./core
       - run: npm run build
