@@ -29,6 +29,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
         working-directory: ./core
+      - run: npm build
+        working-directory: ./core
       - run: npm publish
         working-directory: ./core
         env:
