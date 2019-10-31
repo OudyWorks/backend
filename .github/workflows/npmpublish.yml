@@ -6,48 +6,15 @@ on:
       - "@backend"
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12
-  #     - run: npm ci
-  #       working-directory: ./core
-  #     - run: npm run build
-  #       working-directory: ./core
 
-  # publish-npm:
-  #   # needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12
-  #         registry-url: https://registry.npmjs.org/
-  #     - run: npm ci
-  #       working-directory: ./core
-  #     - run: npm run build
-  #       working-directory: ./core
-  #     - run: cp package.json npm/package.json
-  #       working-directory: ./core
-  #     - run: npm publish
-  #       working-directory: ./core/npm
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-  publish-gpr:
-    # needs: build
+  publish-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: https://npm.pkg.github.com/
-          scope: '@OudyWorks'
+          registry-url: https://registry.npmjs.org/
       - run: npm ci
         working-directory: ./core
       - run: npm run build
@@ -57,4 +24,25 @@ jobs:
       - run: npm publish
         working-directory: ./core/npm
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  # publish-gpr:
+  #   # needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #         registry-url: https://npm.pkg.github.com/
+  #         scope: '@OudyWorks'
+  #     - run: npm ci
+  #       working-directory: ./core
+  #     - run: npm run build
+  #       working-directory: ./core
+  #     - run: cp package.json npm/package.json
+  #       working-directory: ./core
+  #     - run: npm publish
+  #       working-directory: ./core/npm
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
