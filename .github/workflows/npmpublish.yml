@@ -32,7 +32,7 @@ jobs:
       - run: npm build
         working-directory: ./core
       - run: npm publish
-        working-directory: ./core
+        working-directory: ./core/npm
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
