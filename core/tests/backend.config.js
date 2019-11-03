@@ -1,7 +1,7 @@
 import {
   default as MongoDB
 } from './libraries/MongoDB'
-import GraphQL from './_components/graphql'
+// import GraphQL from '@backend/component/graphql'
 
 module.exports = {
   middlewares: [
@@ -10,7 +10,7 @@ module.exports = {
     // }
   ],
   components: [
-    GraphQL
+    // GraphQL
   ],
   async beforeStart() {
     return new Promise(

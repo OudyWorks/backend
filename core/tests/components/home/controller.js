@@ -1,3 +1,5 @@
+import User from '../../types/User'
+
 export async function controller(request, response) {
   response.error({
     status: 400,

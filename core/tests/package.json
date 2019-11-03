@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@oudy/graphql": "^1.0.21",
-    "@oudy/graphql-entity": "^1.0.14",
+    "@backend/cli": "^1.0.0-alpha.2",
+    "@oudy/entity-mongodb": "^1.0.18",
+    "@oudy/graphql": "^1.0.22",
+    "@oudy/graphql-entity": "^1.0.15",
     "@oudy/mongodb": "^1.0.19",
     "apollo-server-core": "^2.9.7",
     "apollo-server-express": "^2.9.7",

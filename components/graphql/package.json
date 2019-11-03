@@ -1,11 +1,26 @@
 {
   "name": "@backend/component-graphql",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src --out-dir npm"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@oudy/graphql": "^1.0.22",
+    "@oudy/graphql-entity": "^1.0.15",
+    "apollo-server-express": "^2.9.7",
+    "fast-glob": "^3.1.0",
+    "subscriptions-transport-ws": "^0.9.16"
+  },
+  "peerDependencies": {
+    "@oudy/graphql": "1.x",
+    "@oudy/graphql-entity": "1.x"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/preset-env": "^7.6.3"
+  }
 }

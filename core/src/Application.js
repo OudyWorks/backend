@@ -1,5 +1,6 @@
 import glob from 'fast-glob'
 import path from 'path'
+import fs from 'fs'
 import {
   Router,
   urlencoded as urlencodedParser,
@@ -50,26 +51,28 @@ class Application {
         )
 
         this.debug('Load config')
-        await import(
-          path.join(this.directory, 'backend.config.js')
-        ).then(
-          config => {
-            this.config = config
-            if (this.config.middlewares && this.config.middlewares.length)
-              this.router.use(this.config.middlewares)
-            if (this.config.beforeStart)
-              this.server.beforeStart.push(this.config.beforeStart)
-            if (this.config.components)
-              this.config.components.forEach(
-                component =>
-                component(this)
-              )
-          }
-        ).catch(
-          error => {
-            console.error('Error loading config', error)
-          }
-        )
+        let configFile = path.join(this.directory, 'backend.config.js')
+        if (fs.existsSync(configFile))
+          await import(
+            configFile
+          ).then(
+            config => {
+              this.config = config
+              if (this.config.middlewares && this.config.middlewares.length)
+                this.router.use(this.config.middlewares)
+              if (this.config.beforeStart)
+                this.server.beforeStart.push(this.config.beforeStart)
+              if (this.config.components)
+                this.config.components.forEach(
+                  component =>
+                  component(this)
+                )
+            }
+          ).catch(
+            error => {
+              console.error('Error loading config', error)
+            }
+          )
 
         this.debug('Load components')
         this.components = glob.sync(
