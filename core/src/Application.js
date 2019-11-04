@@ -187,7 +187,8 @@ class Application {
               },
               this.router,
               (request, response, next) => {
-                response.json(request.payload)
+                if (!response.headersSent)
+                  response.json(request.payload)
               },
             )
           }
