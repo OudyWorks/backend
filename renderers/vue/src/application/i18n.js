@@ -21,5 +21,5 @@ Vue.use(VueI18n)
 
 export default new VueI18n({
   locale: 'en', // set locale
-  messages: {}, // set locale messages
+  messages, // set locale messages
 })

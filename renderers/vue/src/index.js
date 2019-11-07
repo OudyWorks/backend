@@ -21,14 +21,15 @@ export default function ({
   i18n,
   webpack = {}
 } = {}) {
-  return async function (application) {
+  return async function VueRenderer(application) {
     const routes = glob.sync(
         [
           'components/*/route.js',
           'components/*/tasks/*/route.js',
         ], {
           cwd: application.directory,
-          absolute: true
+          absolute: true,
+          ignore: ['**/node_modules/**']
         }
       ).map(
         file => {
@@ -46,7 +47,8 @@ export default function ({
           'components/*/tasks/*/i18n/*.{js,json}',
         ], {
           cwd: application.directory,
-          absolute: true
+          absolute: true,
+          ignore: ['**/node_modules/**']
         }
       ).map(
         file => {
@@ -114,48 +116,57 @@ export default function ({
     compiler.outputFileSystem = outputFileSystem
     bundleCompiler.outputFileSystem = outputFileSystem
 
-    compiler.run(
-      (error, c_stats) => {
-        console.log(error, c_stats && [Object.keys(c_stats.compilation.assets), c_stats.compilation.errors])
-        bundleCompiler.run(
-          (error, stats) => {
-            console.log(error, stats && Object.keys(stats.compilation.assets))
-            const renderer = createBundleRenderer(
-              JSON.parse(stats.compilation.assets['vue-ssr-server-bundle.json'].source()), {
-                runInNewContext: true,
-                clientManifest: JSON.parse(c_stats.compilation.assets['vue-ssr-client-manifest.json'].source())
-              }
-            )
-            application.ready.then(
-              () => {
-                application.router.use(
-                  '/',
-                  function (request, response, next) {
-                    if (request.accepts('html', 'json') != 'html')
-                      next()
-                    else {
-                      let context = {}
-                      renderer.renderToString(
-                        context
-                      ).then(
-                        html => {
-                          const {
-                            title,
-                            htmlAttrs,
-                            headAttrs,
-                            bodyAttrs,
-                            link,
-                            style,
-                            script,
-                            noscript,
-                            meta
-                          } = context.meta.inject()
-                          html = html.replace(' data-server-rendered="true"', '')
-                          response.setHeader('Content-Type', 'text/html')
-                          response.end(`<!doctype html><html ${htmlAttrs.text()}><head ${headAttrs.text()}>${context.renderResourceHints()}${context.renderStyles()}${meta.text()}${title.text()}${link.text()}${style.text()}${script.text()}${noscript.text()}</head><body ${bodyAttrs.text()}>${html}${context.renderState()}${context.renderScripts()}${script.text({ body: true })}</body></html>`)
+    return new Promise(
+      (resolve, reject) => {
+        compiler.run(
+          (error, c_stats) => {
+            if (error)
+              return console.error(error)
+            console.log(Object.keys(c_stats.compilation.assets), c_stats.compilation.errors)
+            bundleCompiler.run(
+              (error, stats) => {
+                if (error)
+                  return console.error(error)
+                console.log(Object.keys(stats.compilation.assets), stats.compilation.errors)
+                const renderer = createBundleRenderer(
+                  JSON.parse(stats.compilation.assets['vue-ssr-server-bundle.json'].source()), {
+                    runInNewContext: true,
+                    clientManifest: JSON.parse(c_stats.compilation.assets['vue-ssr-client-manifest.json'].source())
+                  }
+                )
+                resolve()
+                application.ready.then(
+                  () => {
+                    application.router.use(
+                      '/',
+                      function (request, response, next) {
+                        if (request.accepts('html', 'json') != 'html')
+                          next()
+                        else {
+                          let context = {}
+                          renderer.renderToString(
+                            context
+                          ).then(
+                            html => {
+                              const {
+                                title,
+                                htmlAttrs,
+                                headAttrs,
+                                bodyAttrs,
+                                link,
+                                style,
+                                script,
+                                noscript,
+                                meta
+                              } = context.meta.inject()
+                              html = html.replace(' data-server-rendered="true"', '')
+                              response.setHeader('Content-Type', 'text/html')
+                              response.end(`<!doctype html><html ${htmlAttrs.text()}><head ${headAttrs.text()}>${context.renderResourceHints()}${context.renderStyles()}${meta.text()}${title.text()}${link.text()}${style.text()}${script.text()}${noscript.text()}</head><body ${bodyAttrs.text()}>${html}${context.renderState()}${context.renderScripts()}${script.text({ body: true })}</body></html>`)
+                            }
+                          )
                         }
-                      )
-                    }
+                      }
+                    )
                   }
                 )
               }

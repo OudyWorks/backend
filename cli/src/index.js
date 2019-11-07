@@ -15,7 +15,16 @@ require('@babel/register')({
       }
     ],
   ],
-  plugins: []
+  plugins: [
+    [
+      require('babel-plugin-module-resolver'),
+      {
+        root: [
+          process.cwd()
+        ]
+      }
+    ]
+  ]
 })
 
 const chalk = require('chalk'),
@@ -48,7 +57,12 @@ program
         directory: process.cwd(),
         cookie: true
       })
-    server.start()
+    Promise.all(
+      server.ready
+    ).then(
+      () =>
+      server.start()
+    )
   })
 
 program.parse(process.argv)

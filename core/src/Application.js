@@ -56,17 +56,34 @@ class Application {
           await import(
             configFile
           ).then(
-            config => {
+            async config => {
+              this.debug('Config loaded')
               this.config = config
               if (this.config.middlewares && this.config.middlewares.length)
                 this.router.use(this.config.middlewares)
               if (this.config.beforeStart)
                 this.server.beforeStart.push(this.config.beforeStart)
-              if (this.config.components)
-                this.config.components.forEach(
-                  component =>
-                  component(this)
+              if (this.config.components) {
+                this.debug('Load config components')
+                await this.config.components.reduce(
+                  (promise, component) =>
+                  promise.then(
+                    () => {
+                      const debug = this.debug.extend('component:' + (component.name || 'anonymous'))
+                      debug('loading started')
+                      return component(this).then(
+                        () =>
+                        debug('loading ended')
+                      ).catch(
+                        () =>
+                          debug('loading failed')
+                      )
+                    }
+                  ),
+                  Promise.resolve()
                 )
+                this.debug('Config components loaded')
+              }
             }
           ).catch(
             error => {
@@ -74,7 +91,7 @@ class Application {
             }
           )
 
-        this.debug('Load components')
+        this.debug('Scanning for components')
         this.components = glob.sync(
           [
             'components/*/controller.js',
@@ -93,20 +110,22 @@ class Application {
             }
           }
         )
+        this.debug('Found', this.components.length, 'components')
         await Promise.all(
           this.components.map(
-            component =>
-            import(component.file).then(
-              controller =>
-              Object.assign(
-                component,
-                controller
+            component => {
+              return import(component.file).then(
+                controller =>
+                Object.assign(
+                  component,
+                  controller
+                )
+              ).catch(
+                error => {
+                  console.error('Error loading component', component, error)
+                }
               )
-            ).catch(
-              error => {
-                console.error('Error loading component', component, error)
-              }
-            )
+            }
           )
         ).then(
           routes => {

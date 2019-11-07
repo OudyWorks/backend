@@ -21,7 +21,7 @@ import {
 } from '@oudy/graphql-entity'
 
 export default function () {
-    return async function (application) {
+    return async function GraphQLComponent(application) {
         const directories = [
                 'types', 'queries', 'mutations', 'subscriptions'
             ],
@@ -38,9 +38,10 @@ export default function () {
                     directory,
                     modules: await Promise.all(
                         glob.sync(
-                            path.join(`${directory}/*.js`), {
+                            `**/${directory}/*.js`, {
                                 cwd: application.directory,
-                                absolute: true
+                                absolute: true,
+                                ignore: ['**/node_modules/**']
                             }
                         ).map(
                             file =>

@@ -5,8 +5,8 @@ export default function ({
     root = './',
     options
 }) {
-    return function (application) {
-        return application.ready.then(
+    return async function StaticComponent(application) {
+        application.ready.then(
             async () => {
                 application.router.use(
                     path,
