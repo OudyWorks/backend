@@ -25,7 +25,7 @@ class Application {
   constructor({
     server,
     directory = process.cwd(),
-    cookie = false
+    cookies = false
   } = {}) {
     this.server = server
     this.debug = this.server.debug.extend('application')
@@ -37,7 +37,7 @@ class Application {
         this.router.use(urlencodedParser({
           extended: true
         }))
-        if (cookie)
+        if (cookies)
           this.router.use(cookieParser())
 
         this.debug('Init triggers')
