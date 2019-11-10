@@ -44,18 +44,22 @@ program
   .option('-p, --port <n>', 'Port', 8080)
   .option('-h, --host [value]', 'Host', 'localhost')
   .option('-w, --websocket', 'WebSocket')
+  .option('-c, --cookies', 'Cookies')
   .action(function ({
     port,
-    host
+    host,
+    websocket,
+    cookies
   }) {
     const server = new Server({
         port,
-        host
+        host,
+        websocket
       }),
       application = new Application({
         server,
         directory: process.cwd(),
-        cookie: true
+        cookies
       })
     Promise.all(
       server.ready
