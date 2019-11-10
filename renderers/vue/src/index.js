@@ -140,7 +140,9 @@ export default function ({
                     application.router.use(
                       '/',
                       function (request, response, next) {
-                        if (request.accepts('html', 'json') != 'html')
+                        if (request.accepts().find(
+                            x => x === 'text/html'
+                          ) === 'text/html')
                           next()
                         else {
                           let context = {}
