@@ -38,7 +38,7 @@ class Application {
           extended: true
         }))
         if (cookies)
-          this.router.use(cookieParser())
+          this.router.use(cookieParser(cookies))
 
         this.debug('Init triggers')
         this.triggers = triggers.reduce(
