@@ -20,7 +20,10 @@ import {
     $subscription
 } from '@oudy/graphql-entity'
 
-export default function () {
+export default function ({
+    context,
+    plugins = []
+} = {}) {
     return async function GraphQLComponent(application) {
         const directories = [
                 'types', 'queries', 'mutations', 'subscriptions'
@@ -109,7 +112,9 @@ export default function () {
                         tracing: true,
                         subscriptions: {
                             path: '/subscriptions'
-                        }
+                        },
+                        context,
+                        plugins
                     }),
                     subscriptionServer = new SubscriptionServer({
                         keepAlive: 30000,
