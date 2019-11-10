@@ -44,7 +44,7 @@ program
   .option('-p, --port <n>', 'Port', 8080)
   .option('-h, --host [value]', 'Host', 'localhost')
   .option('-w, --websocket', 'WebSocket')
-  .option('-c, --cookies', 'Cookies')
+  .option('-c, --cookies [value]', 'Cookies', true)
   .action(function ({
     port,
     host,

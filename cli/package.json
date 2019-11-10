@@ -1,6 +1,6 @@
 {
   "name": "@backend/cli",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "",
   "bin": {
     "backend": "index.js"
@@ -15,7 +15,7 @@
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "@babel/register": "^7.6.2",
-    "@backend/core": "^1.0.0-alpha.0",
+    "@backend/core": "^1.0.0-alpha.11",
     "babel-plugin-module-resolver": "^3.2.0",
     "chalk": "^2.4.2",
     "commander": "^3.0.2"
