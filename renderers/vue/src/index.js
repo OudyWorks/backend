@@ -142,7 +142,7 @@ export default function ({
                       function (request, response, next) {
                         if (request.accepts().find(
                             x => x === 'text/html'
-                          ) === 'text/html')
+                          ) !== 'text/html')
                           next()
                         else {
                           let context = {}
